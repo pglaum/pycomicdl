@@ -38,10 +38,10 @@ def page_downloader(url: str, scraper_delay: int = 10, **kwargs):
             cookies=kwargs.get('cookies'))
 
     if connection.status_code != 200:
-        click.secho('Whoops! Seems like I can not connecto to the website.',
+        click.secho('Whoops! Seems like I can not connect to the website.',
                 fg='red')
         click.echo(f'It is showing: {connection}')
-        raise Warning(f'Can not connecto to website {url}')
+        raise Warning(f'Can not connect to website {url}')
     else:
         page_source = BeautifulSoup(connection.text.encode('utf-8'),
             'html.parser')
@@ -50,7 +50,7 @@ def page_downloader(url: str, scraper_delay: int = 10, **kwargs):
         return page_source, connection_cookies
 
 
-def downloader(image_and_name, referrer, directory, **kwargs):
+def downloader(image_and_name, referer, directory, **kwargs):
 
     pbar = kwargs.get('pbar')
 
@@ -64,7 +64,7 @@ def downloader(image_and_name, referrer, directory, **kwargs):
         headers = {
             'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:77.0) Gecko/20100101 Firefox/77.0',
             'Accept-Encoding': 'gzip, deflate',
-            'Referrer': referrer,
+            'Referer': referer,
         }
 
         session = requests.session()
