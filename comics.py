@@ -23,8 +23,9 @@ def cli(ctx, debug):
 @click.option('--directory', '-d', default='downloads', help='The directory '
         'to download to')
 @click.option('--keep/--no-keep', default=True, help='Keep raw image files '
-        'after converting to pdf')
-@click.option('--pdf/--no-pdf', default=True, help='Convert images to pdf')
+        'after converting to pdf [Default: True]')
+@click.option('--pdf/--no-pdf', default=True, help='Convert images to pdf '
+        '[Default: True]')
 @click.pass_context
 def download(ctx, url, directory, keep, pdf):
     """Downloads a comicbook series or chapter.
