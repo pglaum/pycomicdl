@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 
+from bs4 import BeautifulSoup
 from helpers import page_downloader, single_chapter
 import click
+import html
 import os
 import re
 import traceback
+import yaml
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -18,6 +21,53 @@ def cli(ctx, debug):
     ctx.obj['DEBUG'] = debug
 
 
+@cli.command('search')
+@click.argument('keyword')
+@click.option('--results', '-r', type=int, default=5,
+        help='Maximum results [Default: 5]')
+@click.pass_context
+def search(ctx, keyword, results):
+    """Search for a comicbook series.
+    """
+
+    click.secho('All HTML downloads will take some time, because we have to '
+            'fool CloudFlare.', fg='yellow')
+    click.secho(f'Searching for "{keyword}"...', fg='green')
+
+    data = {
+        'keyword': keyword,
+    }
+
+    soup, _ = page_downloader('https://readcomiconline.to/Search/Comic',
+            data=data, method='POST')
+
+    all_links = []
+
+    listings = soup.find_all('table', {'class': 'listing'})
+    for elements in listings:
+        tds = elements.find_all('td')
+        for td in tds:
+            try:
+                result = html.unescape(td['title'])
+                result = BeautifulSoup(result, 'html.parser')
+                href = result.find('a')['href'].strip()
+                href = f'http://readcomiconline.to{href}'
+                title = result.find('a').text.strip()
+                description = result.find('p').text.strip()
+                all_links.append({
+                    'title': title,
+                    'href': href,
+                    'description': description,
+                })
+            except:
+                pass
+
+    for link in all_links[:results]:
+        click.echo('- ' + link['title'])
+        click.echo('  ' + link['href'])
+        click.echo('  ' + link['description'])
+
+
 @cli.command('download')
 @click.argument('url')
 @click.option('--directory', '-d', default='downloads', help='The directory '
@@ -28,7 +78,7 @@ def cli(ctx, debug):
         '[Default: True]')
 @click.pass_context
 def download(ctx, url, directory, keep, pdf):
-    """Downloads a comicbook series or chapter.
+    """Download a comicbook series or chapter.
 
     The URL can be a link to a chapter or series on readcomiconline.to.
     If URL leads to a series, all chapters will be downloaded.
@@ -43,9 +93,9 @@ def download(ctx, url, directory, keep, pdf):
     if len(url_split) in [5]:
         # this is a comicbook series
 
-        click.secho(f'Downloading "{comic_name}"...', fg='green')
         click.secho('All HTML downloads will take some time, because we have to '
                 'fool CloudFlare.', fg='yellow')
+        click.secho(f'Downloading "{comic_name}"...', fg='green')
 
         click.secho('Getting series url...', fg='green')
         soup, _ = page_downloader(url)

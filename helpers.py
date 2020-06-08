@@ -34,8 +34,16 @@ def page_downloader(url: str, scraper_delay: int = 10, **kwargs):
     session = requests.session()
     session = cloudscraper.create_scraper(session, delay=scraper_delay)
 
-    connection = session.get(url, headers=headers,
-            cookies=kwargs.get('cookies'))
+    method = kwargs.get('method')
+    cookies = kwargs.get('cookies')
+
+    if method == 'POST':
+        data = kwargs.get('data')
+        connection = session.post(url, headers=headers, cookies=cookies,
+                data=data)
+    else:
+        connection = session.get(url, headers=headers,
+                cookies=cookies)
 
     if connection.status_code != 200:
         click.secho('Whoops! Seems like I can not connect to the website.',
