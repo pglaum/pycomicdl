@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-from bs4 import BeautifulSoup
-from helpers import page_downloader, single_chapter
+from bs4 import BeautifulSoup # type: ignore
+from .helpers import page_downloader, single_chapter
 import click
 import html
 import os
