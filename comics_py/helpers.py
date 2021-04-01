@@ -6,9 +6,9 @@ Most function of comic_dl live here...
 
 """
 
-from bs4 import BeautifulSoup, RequestsCookieJar  # type: ignore
+from bs4 import BeautifulSoup  # type: ignore
 from tqdm import tqdm  # type: ignore
-from typing import List, Tuple
+from typing import Any, List, Tuple
 import click
 import cloudscraper  # type: ignore
 import glob
@@ -41,8 +41,8 @@ def easy_slug(string: str, repl: str = '-', directory: bool = False) -> str:
         return re.sub(r"[\\\\/:*?\"<>\|]|\ $", repl, string)
 
 
-def page_downloader(url: str, scraper_delay: int = 10, **kwargs: dict
-                    ) -> Tuple[BeautifulSoup, RequestsCookieJar]:
+def page_downloader(url: str, scraper_delay: int = 10, **kwargs
+                    ) -> Tuple[BeautifulSoup, Any]:
     """Download a page while fooling CloudFlare.
 
     We set a User-Agent and use delays and cookies to download a page that is
@@ -256,8 +256,8 @@ def multithreaded_download(
                 err_queue.put(e)
                 in_queue.task_done()
 
-    in_queue = queue.Queue()
-    err_queue = queue.Queue()
+    in_queue: queue.Queue = queue.Queue()
+    err_queue: queue.Queue = queue.Queue()
 
     pbar = tqdm(links, leave=True, unit='img/s', position=0)
     pbar.set_description(f'[comics.py] Downloading: {comic_name} '
@@ -281,18 +281,23 @@ def multithreaded_download(
     except queue.Empty:
         pbar.set_description(f'[comics.py] Done: {comic_name} '
                              f'[{chapter_number}] ')
-        return 0
+        return
     finally:
         pbar.close()
 
 
-def prepend_zeros(current_chapter, total_images):
+def prepend_zeros(current_chapter: int, total_images: int) -> str:
+    """Prepend zeroes to pad a chapter string
+    """
+
     max_digits = int(math.log10(int(total_images))) + 1
     return str(current_chapter).zfill(max_digits)
 
 
 def single_chapter(url: str, comic_name: str, directory: str, keep: bool,
-                   pdf: bool):
+                   pdf: bool) -> None:
+    """Download a single chapter.
+    """
 
     chapter_number = str(url).split('/')[5].split('?')[0].replace('-', ' - ')
     soup, _ = page_downloader(url)
