@@ -1,20 +1,67 @@
-# comics.py
+# comic-dl
 
-This is a download for comics from readcomiconline.to.
+`comic-dl` is a tool for downloading comics from _readcomiconline.li_.
+
+You can search for comics and the download it. Alternatively you could browse
+the website and download the chapters or series you're interested in.
+
+_Search for a comic..._
+
+![search functionality](images/search.png)
+
+_...and download it!_
+
+![download functionality](images/download.png)
+
+The comics can be saved in `JPEG` and transformed to `PDF` files.
 
 ## Installation
 
-Run `pip install .` in the git directory.
-Then you can call the program with `comic-dl`.
+1. Download the source from here: <https://git.sr.ht/~pglaum/comic-dl>
+2. Install the `pikepdf` package for your platform (sometimes pip can't do
+   this)
+3. Install the package: `pip install .`
 
 ## Usage
 
-```help
-Usage: comics.py download [OPTIONS] URL
+```
+Usage: comic-dl [OPTIONS] COMMAND [ARGS]...
 
-  Downloads a comicbook series or chapter.
+  Initialize the CLI context.
 
-  The URL can be a link to a chapter or series on readcomiconline.to. If URL
+Options:
+  --debug / --no-debug
+  --help                Show this message and exit.
+
+Commands:
+  download  Download a comicbook series or chapter.
+  search    Search for a comicbook series.
+```
+
+You can either choose to search for a query or download a url.
+
+### Search
+
+```
+Usage: comic-dl search [OPTIONS] KEYWORD
+
+  Search for a comicbook series.
+
+Options:
+  -r, --results INTEGER  Maximum results [Default: 5]
+  --help                 Show this message and exit.
+```
+
+For example usage see the image above.
+
+### Download
+
+```
+Usage: comic-dl download [OPTIONS] URL
+
+  Download a comicbook series or chapter.
+
+  The URL can be a link to a chapter or series on readcomiconline.li. If URL
   leads to a series, all chapters will be downloaded.
 
 Options:
@@ -26,12 +73,7 @@ Options:
   --help                Show this message and exit.
 ```
 
-- Go to <https://readcomiconline.to> and find a comic you like.
-- Copy the comic and run:
-
-  ```shell
-  ./comics.py download --no-keep --pdf <URL>
-  ```
+For example usage see the image above.
 
 ## Credits
 
