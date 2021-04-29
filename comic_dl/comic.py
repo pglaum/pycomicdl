@@ -39,7 +39,7 @@ def search(ctx, keyword: str, results: int) -> None:
         'keyword': keyword,
     }
 
-    soup, _ = page_downloader('https://readcomiconline.to/Search/Comic',
+    soup, _ = page_downloader('https://readcomiconline.li/Search/Comic',
                               data=data, method='POST')
 
     all_links = []
@@ -52,7 +52,7 @@ def search(ctx, keyword: str, results: int) -> None:
                 result = html.unescape(td['title'])
                 result = BeautifulSoup(result, 'html.parser')
                 href = result.find('a')['href'].strip()
-                href = f'http://readcomiconline.to{href}'
+                href = f'http://readcomiconline.li{href}'
                 title = result.find('a').text.strip()
                 description = result.find('p').text.strip()
                 all_links.append({
@@ -81,7 +81,7 @@ def search(ctx, keyword: str, results: int) -> None:
 def download(ctx, url: str, directory: str, keep: bool, pdf: bool) -> None:
     """Download a comicbook series or chapter.
 
-    The URL can be a link to a chapter or series on readcomiconline.to.
+    The URL can be a link to a chapter or series on readcomiconline.li.
     If URL leads to a series, all chapters will be downloaded.
     """
 
@@ -113,7 +113,7 @@ def download(ctx, url: str, directory: str, keep: bool, pdf: bool) -> None:
         all_links.reverse()
 
         for chapter_link in all_links:
-            chapter_link = 'http://readcomiconline.to' + chapter_link
+            chapter_link = 'http://readcomiconline.li' + chapter_link
 
             try:
                 single_chapter(chapter_link, comic_name, directory, keep, pdf)

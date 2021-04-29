@@ -11,15 +11,15 @@ def read(fname):
 
 
 setup(
-    name = "comics-py",
-    version = "1.0",
+    name = "comic-dl",
+    version = "1.1",
     author = "Philipp Glaum",
     author_email = "p@pglaum.de",
     description = ("A comic downloader"),
     license = "MIT",
     keywords = "comic download",
-    url = "https://git.sr.ht/~pglaum/comics.py",
-    packages=['comics-py'],
+    url = "https://git.sr.ht/~pglaum/comic-dl",
+    packages=['comic_dl'],
     install_requires=[
         'bs4',
         'click',
@@ -29,6 +29,11 @@ setup(
         'tqdm',
         'yaml-1.3'
     ],
+    entry_points = {
+        'console_scripts': [
+            'comic-dl = comic_dl:comic.cli'
+        ],
+    },
     long_description=read('README.md'),
     classifiers=[
         "Programming Language :: Python :: 3",
