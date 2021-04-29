@@ -2,6 +2,11 @@
 
 This is a download for comics from readcomiconline.to.
 
+## Installation
+
+Run `pip install .` in the git directory.
+Then you can call the program with `comic-dl`.
+
 ## Usage
 
 ```help
