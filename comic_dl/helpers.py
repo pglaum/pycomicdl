@@ -17,7 +17,7 @@ import math
 import os
 import queue
 import re
-import requests
+import requests  # type: ignore
 import shutil
 import threading
 
@@ -41,7 +41,7 @@ def easy_slug(string: str, repl: str = '-', directory: bool = False) -> str:
         return re.sub(r"[\\\\/:*?\"<>\|]|\ $", repl, string)
 
 
-def page_downloader(url: str, scraper_delay: int = 10, **kwargs
+def page_downloader(url: str, scraper_delay: int = 10, **kwargs: Any
                     ) -> Tuple[BeautifulSoup, Any]:
     """Download a page while fooling CloudFlare.
 
@@ -102,7 +102,7 @@ def page_downloader(url: str, scraper_delay: int = 10, **kwargs
 
 
 def downloader(image_and_name: Tuple[str, str], referer: str, directory: str,
-               **kwargs: dict) -> None:
+               **kwargs: Any) -> None:
     """Download images with a progress bar.
     """
 
@@ -244,7 +244,7 @@ def multithreaded_download(
     """Download images in multiple threads.
     """
 
-    def worker():
+    def worker() -> None:
         while True:
             try:
                 worker_item = in_queue.get()

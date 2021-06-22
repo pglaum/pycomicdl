@@ -15,7 +15,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 @click.group()
 @click.option('--debug/--no-debug', default=False)
 @click.pass_context
-def cli(ctx, debug: bool) -> None:
+def cli(ctx: click.core.Context, debug: bool) -> None:
     """Initialize the CLI context.
     """
 
@@ -32,7 +32,7 @@ def cli(ctx, debug: bool) -> None:
               help='Base url of readcomiconline '
                    '[Default: https://readcomiconline.li]')
 @click.pass_context
-def search(ctx, keyword: str, results: int, base_url: str) -> None:
+def search(ctx: click.core.Context, keyword: str, results: int, base_url: str) -> None:
     """Search for a comicbook series.
     """
 
@@ -88,7 +88,7 @@ def search(ctx, keyword: str, results: int, base_url: str) -> None:
 @click.option('--pdf/--no-pdf', default=True, help='Convert images to pdf '
               '[Default: True]')
 @click.pass_context
-def download(ctx, url: str, directory: str, keep: bool, pdf: bool) -> None:
+def download(ctx: click.core.Context, url: str, directory: str, keep: bool, pdf: bool) -> None:
     """Download a comicbook series or chapter.
 
     The URL can be a link to a chapter or series on readcomiconline.
