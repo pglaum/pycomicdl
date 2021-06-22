@@ -11,14 +11,14 @@ def read(fname):
 
 
 setup(
-    name = "comic-dl",
-    version = "1.1",
+    name = "pycomicdl",
+    version = "1.2",
     author = "Philipp Glaum",
     author_email = "p@pglaum.de",
     description = ("A comic downloader"),
     license = "MIT",
     keywords = "comic download",
-    url = "https://git.sr.ht/~pglaum/comic-dl",
+    url = "https://git.sr.ht/~pglaum/pycomicdl",
     packages=['comic_dl'],
     install_requires=[
         'bs4',

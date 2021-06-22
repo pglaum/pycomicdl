@@ -1,6 +1,6 @@
-# comic-dl
+# pycomicdl
 
-`comic-dl` is a tool for downloading comics from _readcomiconline.li_.
+`pycomicdl` is a tool for downloading comics from _readcomiconline.li_.
 
 You can search for comics and the download it. Alternatively you could browse
 the website and download the chapters or series you're interested in.
@@ -17,7 +17,7 @@ The comics can be saved in `JPEG` and transformed to `PDF` files.
 
 ## Installation
 
-1. Download the source from here: <https://git.sr.ht/~pglaum/comic-dl>
+1. Download the source from here: <https://git.sr.ht/~pglaum/pycomicdl>
 2. Install the `pikepdf` package for your platform (sometimes pip can't do
    this)
 3. Install the package: `pip install .`

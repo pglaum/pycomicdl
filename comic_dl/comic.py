@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from bs4 import BeautifulSoup  # type: ignore
+from urllib.parse import urljoin, urlsplit, urlunsplit
 from .helpers import page_downloader, single_chapter
 import click
 import html
@@ -26,10 +27,19 @@ def cli(ctx, debug: bool) -> None:
 @click.argument('keyword')
 @click.option('--results', '-r', type=int, default=5,
               help='Maximum results [Default: 5]')
+@click.option('--base-url', '-u', 'base_url', type=str,
+              default='https://readcomiconline.li',
+              help='Base url of readcomiconline '
+                   '[Default: https://readcomiconline.li]')
 @click.pass_context
-def search(ctx, keyword: str, results: int) -> None:
+def search(ctx, keyword: str, results: int, base_url: str) -> None:
     """Search for a comicbook series.
     """
+
+    if not base_url.startswith('http'):
+        click.secho('Error: no scheme provided. Did you mean '
+                    f'https://{base_url}?', fg='red')
+        exit(1)
 
     click.secho('All HTML downloads will take some time, because we have to '
                 'fool CloudFlare.', fg='yellow')
@@ -39,7 +49,7 @@ def search(ctx, keyword: str, results: int) -> None:
         'keyword': keyword,
     }
 
-    soup, _ = page_downloader('https://readcomiconline.li/Search/Comic',
+    soup, _ = page_downloader(urljoin(base_url, 'Search/Comic'),
                               data=data, method='POST')
 
     all_links = []
@@ -52,7 +62,7 @@ def search(ctx, keyword: str, results: int) -> None:
                 result = html.unescape(td['title'])
                 result = BeautifulSoup(result, 'html.parser')
                 href = result.find('a')['href'].strip()
-                href = f'http://readcomiconline.li{href}'
+                href = urljoin(base_url, href)
                 title = result.find('a').text.strip()
                 description = result.find('p').text.strip()
                 all_links.append({
@@ -81,7 +91,7 @@ def search(ctx, keyword: str, results: int) -> None:
 def download(ctx, url: str, directory: str, keep: bool, pdf: bool) -> None:
     """Download a comicbook series or chapter.
 
-    The URL can be a link to a chapter or series on readcomiconline.li.
+    The URL can be a link to a chapter or series on readcomiconline.
     If URL leads to a series, all chapters will be downloaded.
     """
 
@@ -90,6 +100,9 @@ def download(ctx, url: str, directory: str, keep: bool, pdf: bool) -> None:
     comic_name = str(comic_name.title()).replace('-', ' ')
 
     url_split = str(url).split('/')
+
+    split = urlsplit(url)
+    base_url = urlunsplit((split.scheme, split.netloc, '', '', ''))
 
     if len(url_split) in [5]:
         # this is a comicbook series
@@ -113,7 +126,7 @@ def download(ctx, url: str, directory: str, keep: bool, pdf: bool) -> None:
         all_links.reverse()
 
         for chapter_link in all_links:
-            chapter_link = 'http://readcomiconline.li' + chapter_link
+            chapter_link = urljoin(base_url, chapter_link)
 
             try:
                 single_chapter(chapter_link, comic_name, directory, keep, pdf)
